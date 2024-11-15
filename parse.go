@@ -71,10 +71,10 @@ type command struct {
 }
 
 // ErrHelp indicates that the builtin -h or --help were provided
-var ErrHelp = errors.New("help requested by user")
+var ErrHelp = errors.New("请求显示帮助")
 
 // ErrVersion indicates that the builtin --version was provided
-var ErrVersion = errors.New("version requested by user")
+var ErrVersion = errors.New("请求显示版本")
 
 // for monkey patching in example and test code
 var mustParseExit = os.Exit
@@ -685,7 +685,7 @@ func (p *Parser) process(args []string) error {
 		// we expand subcommands so it is better not to use a map)
 		spec := findOption(specs, opt)
 		if spec == nil || opt == "" {
-			return fmt.Errorf("unknown argument %s", arg)
+			return fmt.Errorf("无法识别选项 %s", arg)
 		}
 		wasPresent[spec] = true
 
@@ -719,10 +719,10 @@ func (p *Parser) process(args []string) error {
 		// if we have something like "--foo" then the value is the next argument
 		if value == "" {
 			if i+1 == len(args) {
-				return fmt.Errorf("missing value for %s", arg)
+				return fmt.Errorf("%s 没有提供值", arg)
 			}
 			if !nextIsNumeric(spec.field.Type, args[i+1]) && isFlag(args[i+1]) {
-				return fmt.Errorf("missing value for %s", arg)
+				return fmt.Errorf("%s 没有提供值", arg)
 			}
 			value = args[i+1]
 			i++
@@ -758,7 +758,7 @@ func (p *Parser) process(args []string) error {
 		}
 	}
 	if len(positionals) > 0 {
-		return fmt.Errorf("too many positional arguments at '%s'", positionals[0])
+		return fmt.Errorf("在 '%s' 之后传递了过多的位置参数", positionals[0])
 	}
 
 	// fill in defaults and check that all the required args were provided
@@ -778,7 +778,7 @@ func (p *Parser) process(args []string) error {
 				return errors.New(msg)
 			}
 
-			msg := fmt.Sprintf("%s is required", name)
+			msg := fmt.Sprintf("%s 没有提供值", name)
 			if spec.env != "" {
 				msg += " (or environment variable " + spec.env + ")"
 			}

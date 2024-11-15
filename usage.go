@@ -60,7 +60,7 @@ func (p *Parser) WriteUsageForSubcommand(w io.Writer, subcommand ...string) erro
 	}
 
 	// print the beginning of the usage string
-	fmt.Fprintf(w, "Usage: %s", p.cmd.name)
+	fmt.Fprintf(w, "用法: %s", p.cmd.name)
 	for _, s := range subcommand {
 		fmt.Fprint(w, " "+s)
 	}
@@ -119,7 +119,7 @@ func (p *Parser) WriteUsageForSubcommand(w io.Writer, subcommand ...string) erro
 
 	// if the program supports subcommands, give a hint to the user about their existence
 	if len(cmd.subcommands) > 0 {
-		fmt.Fprint(w, " <command> [<args>]")
+		fmt.Fprint(w, " <命令> [<参数>]")
 	}
 
 	fmt.Fprint(w, "\n")
@@ -170,14 +170,14 @@ func withDefault(s string) string {
 	if s == "" {
 		return ""
 	}
-	return "default: " + s
+	return "默认值: " + s
 }
 
 func withEnv(env string) string {
 	if env == "" {
 		return ""
 	}
-	return "env: " + env
+	return "环境变量: " + env
 }
 
 // WriteHelp writes the usage string followed by the full help string for each option
@@ -241,7 +241,7 @@ func (p *Parser) WriteHelpForSubcommand(w io.Writer, subcommand ...string) error
 
 	// write the list of positionals
 	if len(positionals) > 0 {
-		fmt.Fprint(w, "\nPositional arguments:\n")
+		fmt.Fprint(w, "\n位置参数:\n")
 		for _, spec := range positionals {
 			print(w, spec.placeholder, spec.help, withDefault(spec.defaultString), withEnv(spec.env))
 		}
@@ -249,7 +249,7 @@ func (p *Parser) WriteHelpForSubcommand(w io.Writer, subcommand ...string) error
 
 	// write the list of options with the short-only ones first to match the usage string
 	if len(shortOptions)+len(longOptions) > 0 || cmd.parent == nil {
-		fmt.Fprint(w, "\nOptions:\n")
+		fmt.Fprint(w, "\n选项:\n")
 		for _, spec := range shortOptions {
 			p.printOption(w, spec)
 		}
@@ -260,7 +260,7 @@ func (p *Parser) WriteHelpForSubcommand(w io.Writer, subcommand ...string) error
 
 	// write the list of global options
 	if len(globals) > 0 {
-		fmt.Fprint(w, "\nGlobal options:\n")
+		fmt.Fprint(w, "\n全局选项:\n")
 		for _, spec := range globals {
 			p.printOption(w, spec)
 		}
@@ -271,19 +271,19 @@ func (p *Parser) WriteHelpForSubcommand(w io.Writer, subcommand ...string) error
 		cardinality: zero,
 		long:        "help",
 		short:       "h",
-		help:        "display this help and exit",
+		help:        "显示本帮助",
 	})
 	if !hasVersionOption && p.version != "" {
 		p.printOption(w, &spec{
 			cardinality: zero,
 			long:        "version",
-			help:        "display version and exit",
+			help:        "显示版本",
 		})
 	}
 
 	// write the list of environment only variables
 	if len(envOnlyOptions) > 0 {
-		fmt.Fprint(w, "\nEnvironment variables:\n")
+		fmt.Fprint(w, "\n环境变量:\n")
 		for _, spec := range envOnlyOptions {
 			p.printEnvOnlyVar(w, spec)
 		}
@@ -291,7 +291,7 @@ func (p *Parser) WriteHelpForSubcommand(w io.Writer, subcommand ...string) error
 
 	// write the list of subcommands
 	if len(cmd.subcommands) > 0 {
-		fmt.Fprint(w, "\nCommands:\n")
+		fmt.Fprint(w, "\n子命令:\n")
 		for _, subcmd := range cmd.subcommands {
 			names := append([]string{subcmd.name}, subcmd.aliases...)
 			print(w, strings.Join(names, ", "), subcmd.help)
@@ -320,9 +320,9 @@ func (p *Parser) printOption(w io.Writer, spec *spec) {
 func (p *Parser) printEnvOnlyVar(w io.Writer, spec *spec) {
 	ways := make([]string, 0, 2)
 	if spec.required {
-		ways = append(ways, "Required.")
+		ways = append(ways, "必须.")
 	} else {
-		ways = append(ways, "Optional.")
+		ways = append(ways, "可选.")
 	}
 
 	if spec.help != "" {

@@ -35,7 +35,7 @@ func (p *Parser) lookupCommand(path ...string) (*command, error) {
 	for _, name := range path {
 		found := findSubcommand(cmd.subcommands, name)
 		if found == nil {
-			return nil, fmt.Errorf("%q is not a subcommand of %s", name, cmd.name)
+			return nil, fmt.Errorf("%q 不是 %s 的子命令", name, cmd.name)
 		}
 		cmd = found
 	}
